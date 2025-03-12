@@ -24,11 +24,12 @@ export default function Page() {
         `/api/charities?name=${encodeURIComponent(charityName)}`
       );
       const data = await res.json();
-      console.log("API Response:", data); // Debugging line
+      console.log("API Response:", data);
       if (!res.ok) throw new Error(data.error || "Unknown error");
       setCharity(data);
     } catch (err) {
       setError("Charity not found or failed to load");
+      console.log(err);
     }
   };
 
@@ -69,7 +70,7 @@ export default function Page() {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {Object.entries(charity.spending).map(([key, value], index) => (
+                {Object.entries(charity.spending).map(([key], index) => (
                   <Cell key={key} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
