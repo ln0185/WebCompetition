@@ -10,7 +10,7 @@ export default function CharityPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/api/charitiesSearch", {
+        const response = await fetch("/api/nonprofits", {
           method: "GET",
         });
         console.log(response);
@@ -24,7 +24,7 @@ export default function CharityPage() {
         if (data.error) {
           setError(data.error);
         } else {
-          setCategories(data.categories.nonprofits); //for the charity basics nonprofits --- for the categories nonprofitTags
+          setCategories(data.categories.data.nonprofit); //for the charity basics nonprofits --- for the categories nonprofitTags
         }
       } catch (err) {
         setError("Error fetching data");
@@ -48,15 +48,15 @@ export default function CharityPage() {
             <li key={index} className="mb-10">
               <p>
                 <strong>Name:</strong>{" "}
-                {category.name || "No details available."}
+                {category.title || "No details available."}
               </p>
               <p>
                 <strong>Description:</strong>{" "}
-                {category.description || "No description available."}
+                {category.descriptionLong || "No description available."}
               </p>
               <p>
                 <strong>Location:</strong>{" "}
-                {category.location || "No details available."}
+                {category.id || "No details available."}
               </p>
 
               <Image
