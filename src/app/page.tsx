@@ -1,85 +1,171 @@
 "use client";
 
-import { useState } from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
-interface Charity {
-  name: string;
-  description?: string;
-  spending?: { programs: number; admin: number; fundraising: number };
-}
+export default function CharityPage() {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories", {
+          method: "GET",
+        });
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Error fetching data");
+        }
 
-export default function Page() {
-  const [charityName, setCharityName] = useState("");
-  const [charity, setCharity] = useState<Charity | null>(null);
-  const [error, setError] = useState("");
+        const data = await response.json();
+        console.log("Fetched Data:", data);
 
-  const fetchCharity = async () => {
-    setError("");
-    setCharity(null);
-    try {
-      const res = await fetch(
-        `/api/charities?name=${encodeURIComponent(charityName)}`
-      );
-      const data = await res.json();
-      console.log("API Response:", data);
-      if (!res.ok) throw new Error(data.error || "Unknown error");
-      setCharity(data);
-    } catch (err) {
-      setError("Charity not found or failed to load");
-      console.log(err);
-    }
-  };
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setCategories(data.categories.data.nonprofitTags); //for the charity basics nonprofits --- for the categories nonprofitTags
+        }
+      } catch (err) {
+        setError("Error fetching data");
+        console.error(err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <div className="flex flex-col items-center p-6">
-      <h1 className="text-2xl font-bold mb-4">Charity Spending Tracker</h1>
-      <input
-        type="text"
-        value={charityName}
-        onChange={(e) => setCharityName(e.target.value)}
-        placeholder="Enter charity name"
-        className="border p-2 rounded mb-4"
-      />
-      <button
-        onClick={fetchCharity}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Search
-      </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {charity && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold">{charity.name}</h2>
-          <p className="text-gray-600">{charity.description}</p>
-          {charity.spending && (
-            <PieChart width={300} height={300}>
-              <Pie
-                data={Object.entries(charity.spending).map(
-                  ([key, value], index) => ({
-                    name: key,
-                    value,
-                    color: COLORS[index % COLORS.length],
-                  })
-                )}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {Object.entries(charity.spending).map(([key], index) => (
-                  <Cell key={key} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          )}
-        </div>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">Charities Categories</h1>
+      {categories && categories.length > 0 ? (
+        <ul className="mt-4">
+          {categories.map((category, index) => (
+            <li key={index} className="mb-2">
+              <p>
+                <strong>Cause:</strong>{" "}
+                {category.causeCategory || "No details available."}
+              </p>
+              <p>
+                <strong>title:</strong>{" "}
+                {category.title || "No description available."}
+              </p>
+              <p>
+                <strong>Details:</strong>{" "}
+                {category.tagName || "No details available."}
+              </p>
+              <p>
+                <strong>tagUrl:</strong>{" "}
+                {category.tagUrl || "No details available."}
+              </p>
+              <Image
+                src={category.tagImageUrl || "/fallback"}
+                alt="Img"
+                width={100}
+                height={100}
+              />
+
+              {/* Add more fields as needed */}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No categories found.</p>
       )}
     </div>
   );
 }
+
+/* -----CATEGORIES
+import { useState, useEffect } from "react";
+
+const CategoriesPage = () => {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Unknown error");
+        setCategories(data.categories); // Assuming 'categories' is the array in the response
+      } catch (err) {
+        setError("Failed to load categories");
+        console.error(err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  return (
+    <div>
+      <h1>Categories</h1>
+      {error && <p>{error}</p>}
+      <ul>
+        {categories.map((category, index) => (
+          // Assuming category has categoryId and categoryDesc properties
+          <li key={index}>
+            <strong>{category.categoryId}</strong>: {category.categoryDesc}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default CategoriesPage;
+ */
+
+/* ----- The charity names
+import { useEffect, useState } from "react";
+
+export default function Page() {
+  const [charities, setCharities] = useState<any[]>([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchCharities = async () => {
+      try {
+        const res = await fetch("/api/charities");
+        const data = await res.json();
+        console.log("Charities API Response:", data);
+
+        if (!res.ok) throw new Error(data.error || "Unknown error");
+        setCharities(data.charities); // Update with the correct data format
+      } catch (err) {
+        setError("Failed to load charities");
+        console.error(err);
+      }
+    };
+
+    fetchCharities();
+  }, []);
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Charities</h1>
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* Ensure charities is an array before mapping */ /* }
+      <ul className="mt-4">
+        {Array.isArray(charities) && charities.length > 0 ? (
+          charities.map((charity: any) => (
+            <li key={charity.ein} className="border p-2 rounded mb-2">
+              <h2 className="font-semibold">{charity.charityName}</h2>
+              <p>{charity.category}</p>
+            </li>
+          ))
+        ) : (
+          <p>No charities available</p> // If there are no charities
+        )}
+      </ul>
+    </div>
+  );
+}
+ */
