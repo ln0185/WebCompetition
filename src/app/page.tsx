@@ -1,85 +1,68 @@
 "use client";
+import Navbar from "./../components/navBar/NavBar";
 
-import { useState } from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-
-interface Charity {
-  name: string;
-  description?: string;
-  spending?: { programs: number; admin: number; fundraising: number };
-}
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
+import Image from "next/image";
 
 export default function Page() {
-  const [charityName, setCharityName] = useState("");
-  const [charity, setCharity] = useState<Charity | null>(null);
-  const [error, setError] = useState("");
-
-  const fetchCharity = async () => {
-    setError("");
-    setCharity(null);
-    try {
-      const res = await fetch(
-        `/api/charities?name=${encodeURIComponent(charityName)}`
-      );
-      const data = await res.json();
-      console.log("API Response:", data);
-      if (!res.ok) throw new Error(data.error || "Unknown error");
-      setCharity(data);
-    } catch (err) {
-      setError("Charity not found or failed to load");
-      console.log(err);
-    }
-  };
-
   return (
-    <div className="flex flex-col items-center p-6">
-      <h1 className="text-2xl font-bold mb-4">Charity Spending Tracker</h1>
-      <input
-        type="text"
-        value={charityName}
-        onChange={(e) => setCharityName(e.target.value)}
-        placeholder="Enter charity name"
-        className="border p-2 rounded mb-4"
-      />
-      <button
-        onClick={fetchCharity}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Search
-      </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {charity && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold">{charity.name}</h2>
-          <p className="text-gray-600">{charity.description}</p>
-          {charity.spending && (
-            <PieChart width={300} height={300}>
-              <Pie
-                data={Object.entries(charity.spending).map(
-                  ([key, value], index) => ({
-                    name: key,
-                    value,
-                    color: COLORS[index % COLORS.length],
-                  })
-                )}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {Object.entries(charity.spending).map(([key], index) => (
-                  <Cell key={key} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          )}
+    <div className="w-full">
+      {/* First Section - Charity Finder */}
+      <div className="relative w-full h-screen flex items-center justify-center bg-white">
+        <Navbar />
+
+        {/* Background Image */}
+        <div className="absolute flex justify-center bottom-6 z-1">
+          <Image
+            src="/background.jpg"
+            alt="Background"
+            width={0}
+            height={0}
+            sizes="98vw"
+            className="w-[98vw] h-[90vh] rounded-2xl object-cover"
+          />
         </div>
-      )}
+
+        {/* Title Section */}
+        <div className="relative w-full h-full flex justify-end items-center p-10 z-10">
+          <div className="absolute left-20 top-70 z-10 text-white">
+            <h1 className="text-5xl font-bold mb-4">Donate with Confidence</h1>
+            <h2 className="text-xl font-light max-w-lg">
+              Giving should be simple and transparent. Discover where to donate
+              and track how your contribution makes a difference.
+            </h2>
+          </div>
+        </div>
+      </div>
+      {/* Filter Section */}
+      <div className="relative w-full h-100 bg-slate-200">
+        {" "}
+        <div className="absolute top-12 left-20 z-10 text-gray-800">
+          <h2 className="text-3xl font-semibold mb-4">
+            Giving help to those who need it
+          </h2>
+          <h3 className="text-xl font-light max-w-lg mb-16">
+            Discover organizations dedicated to positive change. Choose a cause
+            that matters to you and see exactly where your donation goes.
+          </h3>
+        </div>
+      </div>
+      {/* Grid Section */}
+      <div className="relative w-full h-screen bg-slate-200">
+        <div className="relative w-full h-full flex justify-center items-center">
+          <div className="grid grid-cols-3 gap-4 w-full max-w-7xl">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg flex justify-center items-center w-[380px] h-[400px]"
+              >
+                <div className="flex justify-center items-center text-gray-800 font-semibold text-xl">
+                  Tile {index + 1}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

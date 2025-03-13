@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const API_URL = "https://orghunter.3scale.net/";
+const API_URL = "http://data.orghunter.com/v1/charityfinancial";
 const API_KEY = "8fd2d30788135b0bc7bd22af69db05e7";
 
 export async function GET(request: Request) {
