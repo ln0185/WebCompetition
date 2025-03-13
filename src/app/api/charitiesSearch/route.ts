@@ -4,7 +4,7 @@ const API_URL = "https://partners.every.org/v0.2/search/humans"; //change the en
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 /*
 ------------------------------------
-| Search Through the charities |
+|| Search Through the charities ||
 ------------------------------------
 */
 export async function GET() {
