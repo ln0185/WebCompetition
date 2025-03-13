@@ -27,14 +27,12 @@ export async function GET() {
 
     return NextResponse.json({ categories: data });
   } catch (error: unknown) {
-    // TypeScript type assertion to tell it error is of type 'Error'
     if (error instanceof Error) {
       return NextResponse.json(
         { error: "Error fetching API", details: error.message },
         { status: 500 }
       );
     } else {
-      // In case the error is not of type 'Error', return a generic message
       return NextResponse.json(
         { error: "Error fetching API", details: "Unknown error" },
         { status: 500 }

@@ -1,58 +1,103 @@
 "use client";
-
 import { useEffect, useState } from "react";
-import CharityGrid from "@/components/charityGrid/CharityGrid";
-import Navbar from "./../components/navBar/NavBar";
+import Navbar from "../components/navBar/NavBar";
 import Image from "next/image";
+import CharityGrid from "@/components/charityGrid/CharityGrid";
 
-interface Category {
-  causeCategory: string;
+interface Nonprofit {
+  name: string;
+  description: string;
+  coverImageCloudinaryId?: string;
+  logoUrl?: string;
+  coverImageUrl?: string;
+  profileUrl?: string;
+  websiteUrl?: string;
+  location?: string;
+  tags?: string[];
+}
+
+interface Fundraiser {
   title: string;
-  tagName: string;
-  tagUrl: string;
-  tagImageUrl: string;
+  description: string;
+  goalAmount: number;
+  raised: number;
+  currency: string;
+  coverImageCloudinaryId: string;
+  logoUrl: string;
+  coverImageUrl: string;
+  profileUrl: string;
+  websiteUrl: string;
+  location: string;
+  tags: string[];
 }
 
 export default function Page() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [fundraisers, setFundraisers] = useState<Fundraiser[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchFundraisers = async () => {
+      setIsLoading(true);
       try {
-        const response = await fetch("/api/categories", {
+        const response = await fetch("/api/fundraisers?take=50", {
           method: "GET",
         });
         if (!response.ok) {
-          throw new Error("Error fetching data");
+          throw new Error("Error fetching fundraisers");
         }
-
         const data = await response.json();
-        if (data.error) {
-          setError(data.error);
+        console.log("Fetched Fundraisers Data:", data);
+
+        if (data?.nonprofits && Array.isArray(data.nonprofits)) {
+          const fundraiserData = data.nonprofits
+            .map((nonprofit: Nonprofit) => ({
+              title: nonprofit.name,
+              description: nonprofit.description || "No description available",
+              goalAmount: 100000,
+              raised: Math.floor(Math.random() * 8000) + 10000,
+              currency: "ISK",
+              coverImageCloudinaryId: nonprofit.coverImageCloudinaryId || "",
+              logoUrl: nonprofit.logoUrl || "",
+              coverImageUrl: nonprofit.coverImageUrl || "",
+              profileUrl: nonprofit.profileUrl || "",
+              websiteUrl: nonprofit.websiteUrl || "",
+              location: nonprofit.location || "",
+              tags: nonprofit.tags || [],
+            }))
+            // Filter out fundraisers without images
+            .filter((fundraiser) => fundraiser.coverImageUrl);
+
+          setFundraisers(fundraiserData);
         } else {
-          setCategories(data.categories.data.nonprofitTags);
+          setError("No fundraisers found");
         }
       } catch (err) {
         setError("Error fetching data");
-        console.error(err);
+        console.error("Error in fetch:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
-
-    fetchCategories();
+    fetchFundraisers();
   }, []);
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
-      {/* First Section - Charity Finder */}
       <div className="relative w-full h-screen flex items-center justify-center bg-white">
         <Navbar />
-
-        {/* Background Image */}
         <div className="absolute flex justify-center bottom-6 z-1">
           <Image
             src="/background.jpg"
@@ -63,8 +108,6 @@ export default function Page() {
             className="w-[98vw] h-[90vh] rounded-2xl object-cover"
           />
         </div>
-
-        {/* Title Section */}
         <div className="relative w-full h-full flex justify-end items-center p-10 z-10">
           <div className="absolute left-20 top-70 z-10 text-white">
             <h1 className="text-5xl font-bold mb-4">Donate with Confidence</h1>
@@ -75,8 +118,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-
-      {/* Filter Section */}
       <div className="relative w-full h-100 bg-slate-200">
         <div className="absolute top-12 left-20 z-10 text-gray-800">
           <h2 className="text-3xl font-semibold mb-4">
@@ -88,9 +129,7 @@ export default function Page() {
           </h3>
         </div>
       </div>
-
-      {/* Grid Section */}
-      <CharityGrid categories={categories} />
+      <CharityGrid fundraisers={fundraisers} />
     </div>
   );
 }
