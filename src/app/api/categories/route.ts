@@ -21,15 +21,15 @@ export async function GET() {
     if (!data) {
       return NextResponse.json(
         { error: "Invalid API response" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
     return NextResponse.json({ categories: data });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error fetching API", details: error.message }, // make a type for Error
-      { status: 500 },
+      { error: "Error fetching API", details: error.message },
+      { status: 500 }
     );
   }
 }
