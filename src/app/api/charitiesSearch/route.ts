@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 
-const API_URL = "https://partners.every.org/v0.2/nonprofit/maps";
+const API_URL = "https://partners.every.org/v0.2/search/humans"; //change the endpoint to things like humans, pets.....
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-
+/*
+------------------------------------
+| Search Through the charities |
+------------------------------------
+*/
 export async function GET() {
   console.log("api key:", apiKey);
   if (!apiKey) {
@@ -33,13 +37,14 @@ export async function GET() {
     );
   }
 }
+
 /*
--------------
- FYRIR ORGHUNTER!! DONT DELETE IF THE OTHER ONE DE-OES NOT WORK
--------------
+----------------
+|  ORGHUNTER  |
+----------------
 import { NextResponse } from "next/server";
 
-const API_URL = "https://data.orghunter.com/v1/categories";
+const API_URL = "https://data.orghunter.com/v1/charitysearch";
 const apiKey = process.env.NEXT_PUBLIC_ORGHUNTER_API_KEY;
 
 export async function GET() {
@@ -70,12 +75,5 @@ export async function GET() {
       { status: 500 },
     );
   }
-}*/
-
-/*Spurja Smára
-laga error lint
-hjálp með þennan nýja api
-hvernig er best að setja þetta upp fyrir nokkra endpoints á homepageinu
-hvernig er best að vera með file structure
-Er ég að nota app router eða page router? og hvernig fatta ég það
+}
 */

@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server";
 
-const API_URL = "https://partners.every.org/v0.2/browse/animals";
+const API_URL = "https://partners.every.org/v0.2/nonprofit/maps";
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-
+/*
+------------
+| Data about Non |
+------------
+*/
 export async function GET() {
   console.log("api key:", apiKey);
   if (!apiKey) {
     return NextResponse.json({ error: "API key is missing" }, { status: 500 });
   }
   try {
-    const res = await fetch(`${API_URL}?apiKey=${apiKey}&take=50`);
+    const res = await fetch(`${API_URL}?apiKey=${apiKey}`);
 
     if (!res.ok) {
       const errorText = await res.text();
@@ -37,11 +41,9 @@ export async function GET() {
 -------------
  FYRIR ORGHUNTER!! DONT DELETE IF THE OTHER ONE DE-OES NOT WORK
 -------------
-
-
 import { NextResponse } from "next/server";
 
-const API_URL = "https://data.orghunter.com/v1/charitybasic";
+const API_URL = "https://data.orghunter.com/v1/categories";
 const apiKey = process.env.NEXT_PUBLIC_ORGHUNTER_API_KEY;
 
 export async function GET() {
@@ -72,5 +74,12 @@ export async function GET() {
       { status: 500 },
     );
   }
-}
+}*/
+
+/*Spurja Smára
+laga error lint
+hjálp með þennan nýja api
+hvernig er best að setja þetta upp fyrir nokkra endpoints á homepageinu
+hvernig er best að vera með file structure
+Er ég að nota app router eða page router? og hvernig fatta ég það
 */

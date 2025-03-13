@@ -10,7 +10,7 @@ export default function CharityPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/api/categories", {
+        const response = await fetch("/api/charitiesSearch", {
           method: "GET",
         });
         console.log(response);
@@ -24,7 +24,7 @@ export default function CharityPage() {
         if (data.error) {
           setError(data.error);
         } else {
-          setCategories(data.categories.data.nonprofitTags); //for the charity basics nonprofits --- for the categories nonprofitTags
+          setCategories(data.categories.nonprofits); //for the charity basics nonprofits --- for the categories nonprofitTags
         }
       } catch (err) {
         setError("Error fetching data");
@@ -40,31 +40,28 @@ export default function CharityPage() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-10 m-10">
       <h1 className="text-2xl font-bold">Charities Categories</h1>
       {categories && categories.length > 0 ? (
         <ul className="mt-4">
           {categories.map((category, index) => (
-            <li key={index} className="mb-2">
+            <li key={index} className="mb-10">
               <p>
-                <strong>Cause:</strong>{" "}
-                {category.causeCategory || "No details available."}
+                <strong>Name:</strong>{" "}
+                {category.name || "No details available."}
               </p>
               <p>
-                <strong>title:</strong>{" "}
-                {category.title || "No description available."}
+                <strong>Description:</strong>{" "}
+                {category.description || "No description available."}
               </p>
               <p>
-                <strong>Details:</strong>{" "}
-                {category.tagName || "No details available."}
+                <strong>Location:</strong>{" "}
+                {category.location || "No details available."}
               </p>
-              <p>
-                <strong>tagUrl:</strong>{" "}
-                {category.tagUrl || "No details available."}
-              </p>
+
               <Image
-                src={category.tagImageUrl || "/fallback"}
-                alt="Img"
+                src={category.coverImageUrl || "/images/charity.jpg"}
+                alt="Img or fallback img"
                 width={100}
                 height={100}
               />
