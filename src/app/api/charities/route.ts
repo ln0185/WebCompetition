@@ -1,86 +1,39 @@
+/*
+----------------
+|  ORGHUNTER  |
+----------------
 import { NextResponse } from "next/server";
 
-const API_URL = "https://orghunter.3scale.net/";
-const API_KEY = "8fd2d30788135b0bc7bd22af69db05e7";
+const API_URL = "https://data.orghunter.com/v1/charitysearch";
+const apiKey = process.env.NEXT_PUBLIC_ORGHUNTER_API_KEY;
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const name = searchParams.get("name");
-
-  if (!name) {
-    return NextResponse.json(
-      { error: "Missing charity name" },
-      { status: 400 }
-    );
+export async function GET() {
+  if (!apiKey) {
+    return NextResponse.json({ error: "API key is missing" }, { status: 500 });
   }
-
-  const query = {
-    query: `
-      query GetCharity($name: String!) {
-        CHC {
-          getCharities(filters: { search: $name }) {
-            list(limit: 1) {
-              id
-              names {
-                value
-              }
-              activities
-              finances {
-                income {
-                  latest {
-                    total
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-    variables: { name },
-  };
-
   try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Apikey ${API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(query),
-    });
+    const res = await fetch(`${API_URL}?user_key=${apiKey}`);
 
     if (!res.ok) {
       const errorText = await res.text();
       throw new Error(`API Error: ${res.status} - ${errorText}`);
     }
 
-    const { data, errors } = await res.json();
+    const data = await res.json();
 
-    if (errors) {
+    if (!data || !data.data) {
       return NextResponse.json(
-        { error: "Error fetching charity data", details: errors },
-        { status: 500 }
+        { error: "Invalid API response" },
+        { status: 500 },
       );
     }
 
-    const charity = data?.CHC?.getCharities?.list?.[0];
-
-    if (!charity) {
-      return NextResponse.json({ error: "Charity not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({
-      name: charity.names?.[0]?.value || "Unknown Charity",
-      description: charity.activities || "No description available",
-      spending: {
-        latestIncome: charity.finances?.income?.latest?.total || 0,
-      },
-    });
+    return NextResponse.json({ categories: data.data });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error fetching CharityBase API", details: error.message },
-      { status: 500 }
+      { error: "Error fetching OrgHunter API", details: error.message }, // make a type for Error
+      { status: 500 },
     );
   }
 }
+*/
