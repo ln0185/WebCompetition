@@ -5,8 +5,16 @@ import CharityGrid from "@/components/charityGrid/CharityGrid";
 import Navbar from "./../components/navBar/NavBar";
 import Image from "next/image";
 
+interface Category {
+  causeCategory: string;
+  title: string;
+  tagName: string;
+  tagUrl: string;
+  tagImageUrl: string;
+}
+
 export default function Page() {
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
