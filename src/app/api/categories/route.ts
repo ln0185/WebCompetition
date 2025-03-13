@@ -26,13 +26,23 @@ export async function GET() {
     }
 
     return NextResponse.json({ categories: data });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Error fetching API", details: error.message },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    // TypeScript type assertion to tell it error is of type 'Error'
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Error fetching API", details: error.message },
+        { status: 500 }
+      );
+    } else {
+      // In case the error is not of type 'Error', return a generic message
+      return NextResponse.json(
+        { error: "Error fetching API", details: "Unknown error" },
+        { status: 500 }
+      );
+    }
   }
 }
+
 /*
 -------------
  FYRIR ORGHUNTER!! DONT DELETE IF THE OTHER ONE DE-OES NOT WORK
