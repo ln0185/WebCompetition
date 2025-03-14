@@ -18,30 +18,23 @@ interface Fundraiser {
 
 interface CharityGridProps {
   fundraisers: Fundraiser[];
+  selectedCategory: string;
 }
 
-const categories = [
-  "All",
-  "education",
-  "animals",
-  "health",
-  "environment",
-  "poverty",
-  "oceans",
-  "refugees",
-];
-
-const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+const FundraiserGrid: React.FC<CharityGridProps> = ({
+  fundraisers,
+  selectedCategory,
+}) => {
   const [currentPage, setCurrentPage] = useState(0);
   const fundraisersPerPage = 6;
 
-  // Filter fundraisers based on the selected category
   const filteredFundraisers =
-    selectedCategory === "All"
+    selectedCategory === "all"
       ? fundraisers
       : fundraisers.filter((fundraiser) =>
-          fundraiser.tags.includes(selectedCategory.toLowerCase())
+          fundraiser.tags.some(
+            (tag) => tag.toLowerCase() === selectedCategory.toLowerCase()
+          )
         );
 
   const totalPages = Math.ceil(filteredFundraisers.length / fundraisersPerPage);
@@ -57,29 +50,9 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
     });
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(0); // Reset pagination when category changes
-  };
-
   return (
-    <div id="charity-grid" className="py-20 px-6 bg-slate-200">
-      {/* Category Buttons */}
-      <div className="flex flex-wrap justify-center gap-3 mb-6">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => handleCategoryChange(category)}
-            className={`px-4 py-2 rounded-full border text-sm font-medium transition-all duration-300 ${
-              selectedCategory === category
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+    <div id="charity-grid" className="py-20 px-6 bg-custom-light">
+      <div className="flex flex-wrap justify-center gap-3 mb-6"></div>
 
       {/* Fundraisers Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -127,7 +100,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
                 <div className="mt-4">
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div
-                      className="bg-blue-600 h-2.5 rounded-full"
+                      className="bg-button-color h-2.5 rounded-full"
                       style={{ width: `${progressPercentage}%` }}
                     ></div>
                   </div>
@@ -143,7 +116,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
                   </div>
                 </div>
 
-                <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded w-full transition-colors duration-300">
+                <button className="mt-4 bg-button-color hover:bg-blue-700 text-white font-medium py-2 px-4 rounded w-full transition-colors duration-300">
                   Donate Now
                 </button>
               </div>
@@ -161,7 +134,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
               onClick={() => changePage(index)}
               className={`w-3 h-3 rounded-full transition-colors duration-300 ${
                 currentPage === index
-                  ? "bg-blue-600"
+                  ? "bg-button-color"
                   : "bg-gray-300 hover:bg-gray-400"
               }`}
               aria-label={`Page ${index + 1}`}
@@ -173,4 +146,4 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
   );
 };
 
-export default CharityGrid;
+export default FundraiserGrid;

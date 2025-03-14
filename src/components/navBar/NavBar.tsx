@@ -8,32 +8,26 @@ export default function Navbar() {
         <ul className="flex space-x-6">
           <li>
             <a
-              href="#"
+              href="#nonprofits-section"
               className="text-gray-700 hover:text-blue-500 transition"
             >
-              Discover Charities
+              Discover Non Profits
             </a>
           </li>
           <li>
             <a
-              href="#"
+              href="#fundraisers-section"
               className="text-gray-700 hover:text-blue-500 transition"
             >
-              About Us
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="text-gray-700 hover:text-blue-500 transition"
-            >
-              Contact Us
+              Discover Fundraisers
             </a>
           </li>
         </ul>
-        <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-          Donate Now
-        </button>
+        <a href="#donate-section">
+          <button className="bg-button-color text-white px-4 py-2 rounded-lg">
+            Donate Now
+          </button>
+        </a>
       </div>
     </nav>
   );
