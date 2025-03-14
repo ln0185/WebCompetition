@@ -28,10 +28,6 @@ export async function GET() {
     return NextResponse.json({ categories: data });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return NextResponse.json({
-        error: "Error fetching API",
-        details: error.message,
-      });
     } else {
       return NextResponse.json(
         { error: "Error fetching API", details: "Unknown error" },
