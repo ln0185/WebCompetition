@@ -23,16 +23,15 @@ export async function GET() {
     const data = await res.json();
 
     if (!data) {
-      return NextResponse.json({ error: "Invalid API response" });
     }
 
     return NextResponse.json({ categories: data });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return NextResponse.json(
-        { error: "Error fetching API", details: error.message },
-        { status: 500 },
-      );
+      return NextResponse.json({
+        error: "Error fetching API",
+        details: error.message,
+      });
     } else {
       return NextResponse.json(
         { error: "Error fetching API", details: "Unknown error" },
