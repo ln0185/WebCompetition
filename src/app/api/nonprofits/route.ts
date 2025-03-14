@@ -23,10 +23,7 @@ export async function GET() {
     const data = await res.json();
 
     if (!data) {
-      return NextResponse.json(
-        { error: "Invalid API response" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Invalid API response" });
     }
 
     return NextResponse.json({ categories: data });
@@ -34,12 +31,12 @@ export async function GET() {
     if (error instanceof Error) {
       return NextResponse.json(
         { error: "Error fetching API", details: error.message },
-        { status: 500 }
+        { status: 500 },
       );
     } else {
       return NextResponse.json(
         { error: "Error fetching API", details: "Unknown error" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
