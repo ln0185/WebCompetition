@@ -66,7 +66,7 @@ export default function Page() {
               tags: nonprofit.tags || [],
             }))
             // Filter out fundraisers without images
-            .filter((fundraiser) => fundraiser.coverImageUrl);
+            .filter((fundraiser: Fundraiser) => fundraiser.coverImageUrl);
 
           setFundraisers(fundraiserData);
         } else {
