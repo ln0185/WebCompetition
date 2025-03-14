@@ -1,28 +1,15 @@
 import { useState, useEffect } from "react";
-
+import { Charity, Nonprofit } from "@/app/types";
 const API_URL = "https://partners.every.org/v0.2/search";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-
-type Charity = {
-  ein: string;
-  name: string;
-  description?: string;
-  coverImageCloudinaryId?: string;
-  logoUrl?: string;
-  coverImageUrl?: string;
-  profileUrl?: string;
-  websiteUrl?: string;
-  location?: string;
-  tags?: string[];
-};
 
 export default function Search({
   onSelectCharity,
 }: {
-  onSelectCharity: (charity: Charity) => void;
+  onSelectCharity: (charity: Nonprofit) => void;
 }) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Charity[]>([]);
+  const [results, setResults] = useState<Nonprofit[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
@@ -41,7 +28,7 @@ export default function Search({
       try {
         const res = await fetch(`${API_URL}/${query}?apiKey=${API_KEY}&take=6`);
         const data = await res.json();
-        setResults(data.nonprofits as Charity[]); // Set results
+        setResults(data.nonprofits as Nonprofit[]); // Set results
       } catch (error) {
         console.error("Error fetching search results:", error);
       }
@@ -73,42 +60,44 @@ export default function Search({
   };
 
   return (
-    <div className="absolute w-full max-w-md mx-auto right-1">
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)} // Update query on input change
-        onKeyDown={handleKeyDown} // Handle keyboard events
-        placeholder="Search charities..."
-        className="w-4/6 p-4 border border-gray-400 rounded-[100px] bg-gray-50"
-      />
+    <div className="flex justify-end mb-10">
+      <div className="relative ">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)} // Update query on input change
+          onKeyDown={handleKeyDown} // Handle keyboard events
+          placeholder="Search charities..."
+          className="h-9 p-4 border border-gray-300  rounded-[100px] bg-gray-50"
+        />
 
-      {/* Show loading spinner */}
-      {loading && query && results.length === 0 && (
-        <p className="text-gray-500 text-sm">Loading...</p>
-      )}
+        {/* Show loading spinner */}
+        {loading && query && results.length === 0 && (
+          <p className="text-gray-500 text-sm">Loading...</p>
+        )}
 
-      {/* Show dropdown with results */}
-      {results.length > 0 && (
-        <ul className="absolute w-4/6 bg-white border rounded-lg  mt-1 z-30 overflow-hidden">
-          {results.map((charity, index) => (
-            <li
-              key={charity.ein || index}
-              className={`p-2 cursor-pointer ${
-                index === selectedIndex ? "bg-gray-200 " : ""
-              }`}
-              onMouseDown={() => {
-                onSelectCharity(charity); // Select charity on click
-                setQuery(""); // Clear query
-                setResults([]); // Hide dropdown
-                setLoading(false); // Stop loading
-              }}
-            >
-              {charity.name}
-            </li>
-          ))}
-        </ul>
-      )}
+        {/* Show dropdown with results */}
+        {results.length > 0 && (
+          <ul className="absolute  bg-white shadow-lg  rounded-lg  mt-1 z-30 overflow-hidden">
+            {results.map((charity, index) => (
+              <li
+                key={charity.ein || index}
+                className={`cursor-pointer px-6 py-4 ${
+                  index === selectedIndex ? "bg-gray-100 rounded-sm " : ""
+                }`}
+                onMouseDown={() => {
+                  onSelectCharity(charity); // Select charity on click
+                  setQuery(""); // Clear query
+                  setResults([]); // Hide dropdown
+                  setLoading(false); // Stop loading
+                }}
+              >
+                {charity.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

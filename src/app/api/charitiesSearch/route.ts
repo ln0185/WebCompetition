@@ -8,7 +8,6 @@ const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 ------------------------------------
 */
 export async function GET() {
-  console.log("api key:", apiKey);
   if (!apiKey) {
     return NextResponse.json({ error: "API key is missing" }, { status: 500 });
   }

@@ -2,49 +2,9 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/navBar/NavBar";
 import Image from "next/image";
-import Search from "@/components/search/Search";
 import CharityGrid from "../components/charityGrid/CharityGrid";
 import NonprofitGrid from "../components/nonProfitGrid/NonprofitGrid";
-
-interface Nonprofit {
-  name: string;
-  description: string;
-  coverImageCloudinaryId?: string;
-  logoUrl?: string;
-  coverImageUrl?: string;
-  profileUrl?: string;
-  websiteUrl?: string;
-  location?: string;
-  tags?: string[];
-}
-
-interface Fundraiser {
-  title: string;
-  description: string;
-  goalAmount: number;
-  raised: number;
-  currency: string;
-  coverImageCloudinaryId: string;
-  logoUrl: string;
-  coverImageUrl: string;
-  profileUrl: string;
-  websiteUrl: string;
-  location: string;
-  tags: string[];
-}
-
-interface Charity {
-  ein: string;
-  name: string;
-  description?: string;
-  coverImageCloudinaryId?: string;
-  logoUrl?: string;
-  coverImageUrl?: string;
-  profileUrl?: string;
-  websiteUrl?: string;
-  location?: string;
-  tags?: string[];
-}
+import { Nonprofit, Fundraiser } from "./types";
 
 export default function Page() {
   const [fundraisers, setFundraisers] = useState<Fundraiser[]>([]);
@@ -155,7 +115,7 @@ export default function Page() {
       </div>
 
       {/* Added Nonprofit Grid Section */}
-      <div className="w-full bg-white py-16">
+      <div className=" w-full bg-white py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-semibold mb-6 text-center">
             Featured Nonprofits
@@ -165,17 +125,11 @@ export default function Page() {
             causes around the world. Support their missions by donating directly
             through their profiles.
           </p>
+
           <NonprofitGrid />
         </div>
       </div>
-      <div className="relative bg-slate-200">
-        <Search
-          onSelectCharity={(charity) => {
-            const fundraiser = mapCharityToFundraiser(charity);
-            updateSelectedCharity(fundraiser);
-          }}
-        />
-      </div>
+
       {/* Existing Charity Grid */}
       <CharityGrid
         fundraisers={fundraisers}

@@ -3,22 +3,33 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
+import Search from "../search/Search";
+import { mapCharityToNonProfit, Nonprofit } from "@/app/types";
+/*
 interface Nonprofit {
   name: string;
   description: string;
-  profileUrl: string;
-  logoUrl: string;
+  profileUrl?: string;
+  logoUrl?: string;
   websiteUrl?: string;
   ein: string;
   matchedTerms?: string[];
-}
+} */
 
 const NonprofitGrid: React.FC = () => {
   const [nonprofits, setNonprofits] = useState<Nonprofit[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
+
+  const updateSelectedCharity = (charity: Nonprofit) => {
+    // Reorder the fundraisers array: selected charity first, followed by related ones
+    const reorderedFundraisers = [
+      charity,
+      ...nonprofits.filter((f) => f.name !== charity.name), // Add the rest
+    ];
+    setNonprofits(reorderedFundraisers);
+  };
 
   const categories = [
     "all",
@@ -79,11 +90,11 @@ const NonprofitGrid: React.FC = () => {
   return (
     <div className="w-full">
       {/* Category Filters */}
-      <div className="flex justify-center mb-8 overflow-x-auto py-2">
+      <div className="flex justify-center  overflow-x-auto py-2">
         <div className="flex space-x-2">
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <button
-              key={category}
+              key={index}
               onClick={() => handleCategoryChange(category)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors
                 ${
@@ -97,6 +108,12 @@ const NonprofitGrid: React.FC = () => {
           ))}
         </div>
       </div>
+      <Search
+        onSelectCharity={(charity) => {
+          const fundraiser = mapCharityToNonProfit(charity);
+          updateSelectedCharity(fundraiser);
+        }}
+      />
 
       {loading ? (
         <div className="flex justify-center items-center h-64">
@@ -123,7 +140,7 @@ const NonprofitGrid: React.FC = () => {
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
                         <span className="text-blue-600 text-lg font-bold">
-                          {nonprofit.name.charAt(0)}
+                          {nonprofit.name[0]}
                         </span>
                       </div>
                     )}
@@ -138,9 +155,9 @@ const NonprofitGrid: React.FC = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {nonprofit.matchedTerms?.map((term) => (
+                  {nonprofit.matchedTerms?.map((term, index) => (
                     <span
-                      key={term}
+                      key={index}
                       className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full"
                     >
                       {term}
@@ -150,7 +167,7 @@ const NonprofitGrid: React.FC = () => {
 
                 <div className="flex justify-between mt-4">
                   <Link
-                    href={nonprofit.profileUrl}
+                    href={nonprofit.profileUrl as string}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
