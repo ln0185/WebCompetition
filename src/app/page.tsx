@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import Navbar from "../components/navBar/NavBar";
 import Image from "next/image";
@@ -59,24 +58,6 @@ export default function Page() {
       ...fundraisers.filter((f) => f.title !== charity.title), // Add the rest
     ];
     setFundraisers(reorderedFundraisers);
-  };
-
-  // Map a Charity object to a Fundraiser object
-  const mapCharityToFundraiser = (charity: Charity): Fundraiser => {
-    return {
-      title: charity.name,
-      description: "No description available", // Default description
-      goalAmount: 100000, // Default goal amount
-      raised: Math.floor(Math.random() * 8000) + 10000, // Random raised amount
-      currency: "ISK", // Default currency
-      coverImageCloudinaryId: charity.coverImageCloudinaryId || "", // Default cover image ID
-      logoUrl: "", // Default logo URL
-      coverImageUrl: "", // Default cover image URL
-      profileUrl: "", // Default profile URL
-      websiteUrl: "", // Default website URL
-      location: "", // Default location
-      tags: [], // Default tags
-    };
   };
 
   useEffect(() => {
@@ -161,7 +142,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div className="flex relative w-full h-100 bg-slate-200">
+      <div className="relative w-full h-100 bg-slate-200">
         <div className="absolute top-12 left-20 z-10 text-gray-800">
           <h2 className="text-3xl font-semibold mb-4">
             Giving help to those who need it
@@ -203,3 +184,20 @@ export default function Page() {
     </div>
   );
 }
+
+/*
+<div className="relative bg-slate-200">
+  <Search
+    onSelectCharity={(charity) => {
+      const fundraiser = mapCharityToFundraiser(charity);
+      updateSelectedCharity(fundraiser);
+    }}
+  />
+</div>
+
+<CharityGrid
+  fundraisers={fundraisers}
+  onCharityClick={updateSelectedCharity}
+/>
+
+*/

@@ -1,20 +1,55 @@
+// app/api/nonprofits/route.ts
 import { NextResponse } from "next/server";
 
-const API_URL = "https://partners.every.org/v0.2/nonprofit/maps";
+const API_BASE_URL = "https://partners.every.org/v0.2";
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-console.log("API: ", API_URL);
-/*
-------------
-| Data about Non |
-------------
-*/
-export async function GET() {
-  console.log("api key:", apiKey);
+
+export async function GET(request: Request) {
   if (!apiKey) {
     return NextResponse.json({ error: "API key is missing" }, { status: 500 });
   }
+
+  const url = new URL(request.url);
+  const take = url.searchParams.get("take") || "20";
+  const searchTerm = url.searchParams.get("searchTerm");
+  const cause = url.searchParams.get("cause");
+
   try {
-    const res = await fetch(`${API_URL}?apiKey=${apiKey}`);
+    let endpoint;
+    let params = `?apiKey=${apiKey}&take=${take}`;
+
+    if (searchTerm) {
+      // Use search endpoint with specific term
+      endpoint = `${API_BASE_URL}/search/${searchTerm}${params}`;
+
+      if (cause) {
+        params += `&causes=${cause}`;
+      }
+    } else if (cause) {
+      // Use browse endpoint for specific cause
+      endpoint = `${API_BASE_URL}/browse/${cause}${params}`;
+    } else {
+      // Choose a featured category randomly for variety
+      const featuredCategories = [
+        "animals",
+        "education",
+        "health",
+        "environment",
+        "arts",
+        "disaster",
+        "veterans",
+      ];
+
+      const randomCategory =
+        featuredCategories[
+          Math.floor(Math.random() * featuredCategories.length)
+        ];
+      endpoint = `${API_BASE_URL}/browse/${randomCategory}${params}`;
+    }
+
+    console.log("Fetching from:", endpoint);
+
+    const res = await fetch(endpoint);
 
     if (!res.ok) {
       const errorText = await res.text();
@@ -22,13 +57,13 @@ export async function GET() {
     }
 
     const data = await res.json();
-
-    if (!data) {
-    }
-
-    return NextResponse.json({ categories: data });
+    return NextResponse.json(data);
   } catch (error: unknown) {
     if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Error fetching API", details: error.message },
+        { status: 500 },
+      );
     } else {
       return NextResponse.json(
         { error: "Error fetching API", details: "Unknown error" },
@@ -37,50 +72,3 @@ export async function GET() {
     }
   }
 }
-
-/*
--------------
- FYRIR ORGHUNTER!! DONT DELETE IF THE OTHER ONE DE-OES NOT WORK
--------------
-import { NextResponse } from "next/server";
-
-const API_URL = "https://data.orghunter.com/v1/categories";
-const apiKey = process.env.NEXT_PUBLIC_ORGHUNTER_API_KEY;
-
-export async function GET() {
-  if (!apiKey) {
-    return NextResponse.json({ error: "API key is missing" }, { status: 500 });
-  }
-  try {
-    const res = await fetch(`${API_URL}?user_key=${apiKey}`);
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(`API Error: ${res.status} - ${errorText}`);
-    }
-
-    const data = await res.json();
-
-    if (!data || !data.data) {
-      return NextResponse.json(
-        { error: "Invalid API response" },
-        { status: 500 },
-      );
-    }
-
-    return NextResponse.json({ categories: data.data });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Error fetching OrgHunter API", details: error.message }, // make a type for Error
-      { status: 500 },
-    );
-  }
-}*/
-
-/*Spurja Smára
-laga error lint
-hjálp með þennan nýja api
-hvernig er best að setja þetta upp fyrir nokkra endpoints á homepageinu
-hvernig er best að vera með file structure
-Er ég að nota app router eða page router? og hvernig fatta ég það
-*/
