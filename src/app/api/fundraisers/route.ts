@@ -10,17 +10,30 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url);
-  const take = url.searchParams.get("take") || "24";
+  const take = url.searchParams.get("take") || "50";
 
   try {
-    // Use the search endpoint to get multiple nonprofits
-    // Try different search terms to get more variety
     const searchTerms = [
       "education",
       "animals",
       "health",
       "environment",
       "poverty",
+      "oceans",
+      "refugees",
+      "adoption",
+      "art",
+      "athletics",
+      "autism",
+      "cancer",
+      "cats",
+      "climate",
+      "culture",
+      "dance",
+      "disabilities",
+      "disease",
+      "dogs",
+      "filmandtv",
     ];
     const randomTerm =
       searchTerms[Math.floor(Math.random() * searchTerms.length)];
