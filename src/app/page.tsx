@@ -33,19 +33,6 @@ interface Fundraiser {
   tags: string[];
 }
 
-interface Charity {
-  ein: string;
-  name: string;
-  description?: string;
-  coverImageCloudinaryId?: string;
-  logoUrl?: string;
-  coverImageUrl?: string;
-  profileUrl?: string;
-  websiteUrl?: string;
-  location?: string;
-  tags?: string[];
-}
-
 export default function Page() {
   const [fundraisers, setFundraisers] = useState<Fundraiser[]>([]);
   const [error, setError] = useState<string | null>(null);
