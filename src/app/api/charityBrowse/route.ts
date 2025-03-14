@@ -26,21 +26,29 @@ export async function GET() {
     if (!data) {
       return NextResponse.json(
         { error: "Invalid API response" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
     return NextResponse.json({ categories: data });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Error fetching API", details: error.message }, // make a type for Error
-      { status: 500 },
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Error fetching API", details: error.message },
+        { status: 500 }
+      );
+    } else {
+      return NextResponse.json(
+        { error: "Error fetching API", details: "Unknown error" },
+        { status: 500 }
+      );
+    }
   }
 }
+
 /*
 -------------
- FYRIR ORGHUNTER!! DONT DELETE IF THE OTHER ONE DE-OES NOT WORK
+ FYRIR ORGHUNTER!! DONT DELETE IF THE OTHER ONE DOES NOT WORK
 -------------
 
 
