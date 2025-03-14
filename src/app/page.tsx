@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/navBar/NavBar";
 import Image from "next/image";
-import CharityGrid from "@/components/charityGrid/CharityGrid";
 import Search from "@/components/search/Search";
+import CharityGrid from "../components/charityGrid/CharityGrid";
+import NonprofitGrid from "../components/nonProfitGrid/NonprofitGrid";
 
 interface Nonprofit {
   name: string;
@@ -48,9 +49,6 @@ interface Charity {
 
 export default function Page() {
   const [fundraisers, setFundraisers] = useState<Fundraiser[]>([]);
-  const [selectedCharity, setSelectedCharity] = useState<Fundraiser | null>(
-    null,
-  );
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -111,7 +109,7 @@ export default function Page() {
               tags: nonprofit.tags || [],
             }))
             // Filter out fundraisers without images
-            .filter((fundraiser) => fundraiser.coverImageUrl);
+            .filter((fundraiser: Fundraiser) => fundraiser.coverImageUrl);
 
           setFundraisers(fundraiserData);
         } else {
@@ -174,6 +172,21 @@ export default function Page() {
           </h3>
         </div>
       </div>
+
+      {/* Added Nonprofit Grid Section */}
+      <div className="w-full bg-white py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-semibold mb-6 text-center">
+            Featured Nonprofits
+          </h2>
+          <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
+            Explore nonprofit organizations making a difference in various
+            causes around the world. Support their missions by donating directly
+            through their profiles.
+          </p>
+          <NonprofitGrid />
+        </div>
+      </div>
       <div className="relative bg-slate-200">
         <Search
           onSelectCharity={(charity) => {
@@ -182,9 +195,10 @@ export default function Page() {
           }}
         />
       </div>
+      {/* Existing Charity Grid */}
       <CharityGrid
         fundraisers={fundraisers}
-        onCharityClick={updateSelectedCharity} // Pass the function to handle charity clicks
+        onCharityClick={updateSelectedCharity}
       />
     </div>
   );
