@@ -9,6 +9,7 @@ export interface Nonprofit {
   websiteUrl?: string;
   location?: string;
   tags?: string[];
+  matchedTerms?: string[];
 }
 
 export interface Fundraiser {
