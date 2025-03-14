@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+type ErrorType = { error: string; details: { error: { message: string } } };
+
 const API_URL = "https://partners.every.org/v0.2/search/humans"; //change the endpoint to things like humans, pets.....
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 /*
@@ -29,9 +31,13 @@ export async function GET() {
     }
 
     return NextResponse.json({ categories: data });
-  } catch (error) {
+  } catch (error: unknown) {
+    const typedError = error as ErrorType;
     return NextResponse.json(
-      { error: "Error fetching API", details: error.message }, // make a type for Error
+      {
+        error: "Error fetching API",
+        details: typedError.details.error.message,
+      },
       { status: 500 },
     );
   }
