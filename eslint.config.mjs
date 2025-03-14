@@ -13,6 +13,7 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
+      "react/no-inline-styles": "off",
       "prefer-const": "off",
     },
   },

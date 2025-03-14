@@ -1,99 +1,29 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/navBar/NavBar";
 import Image from "next/image";
-import CharityGrid from "../components/charityGrid/CharityGrid";
+import FundraiserGrid from "../components/fundraiserGrid/FundraiserGrid";
 import NonprofitGrid from "../components/nonProfitGrid/NonprofitGrid";
-
-interface Nonprofit {
-  name: string;
-  description: string;
-  coverImageCloudinaryId?: string;
-  logoUrl?: string;
-  coverImageUrl?: string;
-  profileUrl?: string;
-  websiteUrl?: string;
-  location?: string;
-  tags?: string[];
-}
-
-interface Fundraiser {
-  title: string;
-  description: string;
-  goalAmount: number;
-  raised: number;
-  currency: string;
-  coverImageCloudinaryId: string;
-  logoUrl: string;
-  coverImageUrl: string;
-  profileUrl: string;
-  websiteUrl: string;
-  location: string;
-  tags: string[];
-}
+import FilterBar from "../components/filterBar/FilterBar";
 
 export default function Page() {
-  const [fundraisers, setFundraisers] = useState<Fundraiser[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  useEffect(() => {
-    const fetchFundraisers = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("/api/fundraisers?take=50", {
-          method: "GET",
-        });
-        if (!response.ok) {
-          throw new Error("Error fetching fundraisers");
-        }
-        const data = await response.json();
-        console.log("Fetched Fundraisers Data:", data);
+  // Define shared categories
+  const categories = [
+    "all",
+    "animals",
+    "environment",
+    "oceans",
+    "health",
+    "education",
+    "poverty",
+    "refugees",
+  ];
 
-        if (data?.nonprofits && Array.isArray(data.nonprofits)) {
-          const fundraiserData = data.nonprofits
-            .map((nonprofit: Nonprofit) => ({
-              title: nonprofit.name,
-              description: nonprofit.description || "No description available",
-              goalAmount: 100000,
-              raised: Math.floor(Math.random() * 8000) + 10000,
-              currency: "ISK",
-              coverImageCloudinaryId: nonprofit.coverImageCloudinaryId || "",
-              logoUrl: nonprofit.logoUrl || "",
-              coverImageUrl: nonprofit.coverImageUrl || "",
-              profileUrl: nonprofit.profileUrl || "",
-              websiteUrl: nonprofit.websiteUrl || "",
-              location: nonprofit.location || "",
-              tags: nonprofit.tags || [],
-            }))
-            // Filter out fundraisers without images
-            .filter((fundraiser: Fundraiser) => fundraiser.coverImageUrl);
-
-          setFundraisers(fundraiserData);
-        } else {
-          setError("No fundraisers found");
-        }
-      } catch (err) {
-        setError("Error fetching data");
-        console.error("Error in fetch:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchFundraisers();
-  }, []);
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
-  }
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
 
   return (
     <div className="w-full">
@@ -131,7 +61,21 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Added Nonprofit Grid Section */}
+      {/* Shared Filter Bar for both components */}
+      <div className="w-full bg-slate-100 py-6">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl font-semibold mb-4 text-center">
+            Browse by Category
+          </h2>
+          <FilterBar
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryChange}
+          />
+        </div>
+      </div>
+
+      {/* Nonprofit Grid Section */}
       <div className="w-full bg-white py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-semibold mb-6 text-center">
@@ -142,12 +86,12 @@ export default function Page() {
             causes around the world. Support their missions by donating directly
             through their profiles.
           </p>
-          <NonprofitGrid />
+          <NonprofitGrid selectedCategory={selectedCategory} />
         </div>
       </div>
 
-      {/* Existing Charity Grid */}
-      <CharityGrid fundraisers={fundraisers} />
+      {/* Fundraiser Grid - now only needs selectedCategory */}
+      <FundraiserGrid selectedCategory={selectedCategory} />
     </div>
   );
 }
