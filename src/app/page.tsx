@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/navBar/NavBar";
 import Image from "next/image";
-import CharityGrid from "@/components/charityGrid/CharityGrid";
+import CharityGrid from "../components/charityGrid/CharityGrid";
+import NonprofitGrid from "../components/nonProfitGrid/NonprofitGrid";
 
 interface Nonprofit {
   name: string;
@@ -129,6 +130,23 @@ export default function Page() {
           </h3>
         </div>
       </div>
+
+      {/* Added Nonprofit Grid Section */}
+      <div className="w-full bg-white py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-semibold mb-6 text-center">
+            Featured Nonprofits
+          </h2>
+          <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
+            Explore nonprofit organizations making a difference in various
+            causes around the world. Support their missions by donating directly
+            through their profiles.
+          </p>
+          <NonprofitGrid />
+        </div>
+      </div>
+
+      {/* Existing Charity Grid */}
       <CharityGrid fundraisers={fundraisers} />
     </div>
   );

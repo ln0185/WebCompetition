@@ -10,11 +10,9 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url);
-  const take = url.searchParams.get("take") || "200";
+  const take = url.searchParams.get("take") || "50";
 
   try {
-    // Use the search endpoint to get multiple nonprofits
-    // Try different search terms to get more variety
     const searchTerms = [
       "education",
       "animals",
