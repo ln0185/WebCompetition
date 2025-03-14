@@ -18,6 +18,7 @@ interface Fundraiser {
 
 interface CharityGridProps {
   fundraisers: Fundraiser[];
+  onCharityClick: (charity: Fundraiser) => void;
 }
 
 const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
@@ -47,7 +48,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
           // Calculate progress percentage
           const progressPercentage = Math.min(
             100,
-            (fundraiser.raised / fundraiser.goalAmount) * 100
+            (fundraiser.raised / fundraiser.goalAmount) * 100,
           );
           const progressWidth = `${progressPercentage}%`;
 
@@ -61,6 +62,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
             >
               <div className="relative w-full h-48">
                 <Image
+                  key={index}
                   src={fundraiser.coverImageUrl}
                   alt={`${fundraiser.title} cover`}
                   fill
@@ -69,6 +71,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
                 {fundraiser.logoUrl && (
                   <div className="absolute bottom-3 left-3 w-12 h-12 rounded-full overflow-hidden border-2 border-white">
                     <Image
+                      key={index}
                       src={fundraiser.logoUrl}
                       alt={`${fundraiser.title} logo`}
                       fill
@@ -78,7 +81,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
                 )}
               </div>
 
-              <div className="p-4">
+              <div className="p-4" key={index}>
                 <div className="flex items-start justify-between">
                   <h3 className="text-xl font-semibold line-clamp-1">
                     {fundraiser.title}

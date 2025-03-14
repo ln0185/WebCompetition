@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 const API_URL = "https://partners.every.org/v0.2/nonprofit/maps";
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+console.log("API: ", API_URL);
 /*
 ------------
 | Data about Non |
