@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
+import handHeart from "./../../../public/hand-heart.svg";
 
 interface FilterBarProps {
   categories: string[];
@@ -14,22 +16,53 @@ const FilterBar: React.FC<FilterBarProps> = ({
   onCategoryChange,
 }) => {
   return (
-    <div className="flex justify-center mb-8 overflow-x-auto py-2">
-      <div className="flex space-x-2">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => onCategoryChange(category)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors
-              ${
-                selectedCategory === category
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-              }`}
-          >
-            {category.charAt(0).toUpperCase() + category.slice(1)}
-          </button>
-        ))}
+    <div className="hidden md:flex justify-center w-full bg-filter py-6">
+      <div className="w-full max-w-[1240px] mx-auto">
+        {/* Title Aligned with First Button */}
+        <h2 className="text-md font-light mb-4 text-left ml-[15px]">
+          Browse by category
+        </h2>
+
+        {/* Category Buttons Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => onCategoryChange(category)}
+              className={`w-full max-w-[300px] h-[105px] rounded-[16px] text-sm font-medium transition-colors relative flex flex-col justify-between px-6 py-[17px] pr-12
+                ${
+                  selectedCategory === category
+                    ? "bg-button-color text-white"
+                    : "bg-custom-light text-gray-900 hover:bg-button-color hover:text-white"
+                }`}
+            >
+              {/* Category Title and Subtext */}
+              <div className="text-left flex flex-col flex-grow space-y-2">
+                {/* Category Title */}
+                <span className="font-semibold text-base md:text-lg">
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </span>
+
+                {/* "Support for" Text */}
+                <p className="text-xs md:text-sm font-normal mt-1">
+                  Support for{" "}
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </p>
+              </div>
+
+              {/* Hand Heart Icon Positioned on the Right */}
+              <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
+                <Image
+                  src={handHeart}
+                  alt="Hand Heart Icon"
+                  width={32}
+                  height={32}
+                  className="transition-all duration-300 ease-in-out filter invert-0 hover:invert"
+                />
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -22,6 +22,9 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
   const [nonprofits, setNonprofits] = useState<Nonprofit[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const nonprofitsPerPage = 8;
 
   useEffect(() => {
     const fetchNonprofits = async () => {
@@ -49,7 +52,20 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
     };
 
     fetchNonprofits();
-  }, [selectedCategory]); // Re-fetch when selectedCategory changes
+  }, [selectedCategory]);
+
+  const totalPages = Math.ceil(nonprofits.length / nonprofitsPerPage);
+  const startIndex = currentPage * nonprofitsPerPage;
+  const endIndex = startIndex + nonprofitsPerPage;
+  const currentNonprofits = nonprofits.slice(startIndex, endIndex);
+
+  const changePage = (pageIndex: number) => {
+    setCurrentPage(pageIndex);
+    window.scrollTo({
+      top: document.getElementById("nonprofit-grid")?.offsetTop || 0,
+      behavior: "smooth",
+    });
+  };
 
   if (error) {
     return (
@@ -66,88 +82,96 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
   }
 
   return (
-    <div className="w-full">
+    <div id="nonprofit-grid" className="w-full">
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {nonprofits.length > 0 ? (
-            nonprofits.map((nonprofit) => (
-              <div
-                key={nonprofit.ein}
-                className="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition-shadow duration-300"
-              >
-                <div className="p-5">
-                  <div className="flex items-center mb-4">
-                    <div className="relative w-12 h-12 mr-4 flex-shrink-0">
-                      {nonprofit.logoUrl ? (
-                        <Image
-                          src={nonprofit.logoUrl}
-                          alt={`${nonprofit.name} logo`}
-                          width={48}
-                          height={48}
-                          className="rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                          <span className="text-blue-600 text-lg font-bold">
-                            {nonprofit.name.charAt(0)}
-                          </span>
-                        </div>
-                      )}
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {currentNonprofits.length > 0 ? (
+              currentNonprofits.map((nonprofit) => (
+                <div
+                  key={`${nonprofit.ein}-${nonprofit.name}`}
+                  className="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition-shadow duration-300 relative"
+                >
+                  <div className="p-5">
+                    <div className="flex items-center mb-4">
+                      <div className="relative w-12 h-12 mr-4 flex-shrink-0">
+                        {nonprofit.logoUrl ? (
+                          <Image
+                            src={nonprofit.logoUrl}
+                            alt={`${nonprofit.name} logo`}
+                            width={48}
+                            height={48}
+                            className="rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <span className="text-blue-600 text-lg font-bold">
+                              {nonprofit.name.charAt(0)}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="font-semibold text-lg line-clamp-2">
+                        {nonprofit.name}
+                      </h3>
                     </div>
-                    <h3 className="font-semibold text-lg line-clamp-2">
-                      {nonprofit.name}
-                    </h3>
-                  </div>
 
-                  <p className="text-gray-600 line-clamp-3 mb-4 h-18 text-sm">
-                    {nonprofit.description || "No description available"}
-                  </p>
+                    <p className="text-gray-600 line-clamp-3 mb-4 h-18 text-sm">
+                      {nonprofit.description || "No description available"}
+                    </p>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {nonprofit.matchedTerms?.map((term) => (
-                      <span
-                        key={term}
-                        className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full"
-                      >
-                        {term}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex justify-between mt-4">
-                    <Link
-                      href={nonprofit.profileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      Donate
-                    </Link>
-
-                    {nonprofit.websiteUrl && (
+                    <div className="flex justify-between mt-4">
                       <Link
-                        href={nonprofit.websiteUrl}
+                        href={nonprofit.profileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors"
+                        className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
                       >
-                        Learn More
+                        Donate
                       </Link>
-                    )}
+
+                      {nonprofit.websiteUrl && (
+                        <Link
+                          href={nonprofit.websiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          Learn More
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
+              ))
+            ) : (
+              <div className="col-span-4 py-12 text-center text-gray-500">
+                No nonprofits found for this category.
               </div>
-            ))
-          ) : (
-            <div className="col-span-4 py-12 text-center text-gray-500">
-              No nonprofits found for this category.
+            )}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-10 space-x-2">
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => changePage(index)}
+                  className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                    currentPage === index
+                      ? "bg-blue-600"
+                      : "bg-gray-300 hover:bg-gray-400"
+                  }`}
+                  aria-label={`Page ${index + 1}`}
+                />
+              ))}
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );
