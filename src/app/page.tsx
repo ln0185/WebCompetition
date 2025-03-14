@@ -1,5 +1,9 @@
 "use client";
 
+/*
+------
+non profits display
+------
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -66,7 +70,7 @@ export default function CharityPage() {
                 height={100}
               />
 
-              {/* Add more fields as needed */}
+              {/* Add more fields as needed */ /* }
             </li>
           ))}
         </ul>
@@ -76,6 +80,7 @@ export default function CharityPage() {
     </div>
   );
 }
+*/
 
 /* -----CATEGORIES
 import { useState, useEffect } from "react";
