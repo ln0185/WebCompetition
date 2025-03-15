@@ -51,8 +51,8 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
   };
 
   return (
-    <div id="charity-grid" className="py-20 px-6 bg-custom-light">
-      <div className="flex flex-wrap justify-center gap-3 mb-6"></div>
+    <div id="charity-grid" className="px-6 bg-custom-light">
+      <div className="flex flex-wrap justify-center gap-3 ml-[15px] "></div>
 
       {/* Fundraisers Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -68,7 +68,7 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
               href={fundraiser.profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white"
+              className="block border-[#d9d9d9] rounded-lg overflow-hidden hover:scale-102 transition-transform duration-200 bg-white"
             >
               <div className="relative w-full h-48">
                 <Image
@@ -78,7 +78,7 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
                   className="object-cover"
                 />
                 {fundraiser.logoUrl && (
-                  <div className="absolute bottom-3 left-3 w-12 h-12 rounded-full overflow-hidden border-2 border-white">
+                  <div className="absolute bottom-3 left-3 w-12 h-12 rounded-full overflow-hidden border-2 border-color">
                     <Image
                       src={fundraiser.logoUrl}
                       alt={`${fundraiser.title} logo`}
@@ -93,30 +93,30 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
                 <h3 className="text-xl font-semibold line-clamp-1">
                   {fundraiser.title}
                 </h3>
-                <p className="text-gray-600 mt-2 text-sm line-clamp-3 h-16">
+                <p className="text-gray-900 mt-2 text-sm line-clamp-3 h-16">
                   {fundraiser.description}
                 </p>
 
                 <div className="mt-4">
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div className="w-full bg-custom-light rounded-full h-2.5">
                     <div
                       className="bg-button-color h-2.5 rounded-full"
                       style={{ width: `${progressPercentage}%` }}
                     ></div>
                   </div>
                   <div className="flex justify-between mt-2">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-900">
                       Raised: {fundraiser.currency}{" "}
                       {fundraiser.raised.toLocaleString()}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-900">
                       Goal: {fundraiser.currency}{" "}
                       {fundraiser.goalAmount.toLocaleString()}
                     </p>
                   </div>
                 </div>
 
-                <button className="mt-4 bg-button-color hover:bg-blue-700 text-white font-medium py-2 px-4 rounded w-full transition-colors duration-300">
+                <button className="mt-4 bg-button-color hover:bg-button-color2 text-white font-medium  py-2 px-4 rounded-full w-full transition-colors duration-300">
                   Donate Now
                 </button>
               </div>
@@ -135,7 +135,7 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
               className={`w-3 h-3 rounded-full transition-colors duration-300 ${
                 currentPage === index
                   ? "bg-button-color"
-                  : "bg-gray-300 hover:bg-gray-400"
+                  : "bg-gray-300 hover:bg-button-color2"
               }`}
               aria-label={`Page ${index + 1}`}
             />
