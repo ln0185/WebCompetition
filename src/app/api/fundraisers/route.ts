@@ -39,7 +39,7 @@ export async function GET(request: Request) {
       searchTerms[Math.floor(Math.random() * searchTerms.length)];
 
     const res = await fetch(
-      `${API_URL}/search/${randomTerm}?apiKey=${apiKey}&take=${take}`
+      `${API_URL}/search/${randomTerm}?apiKey=${apiKey}&take=${take}`,
     );
 
     if (!res.ok) {
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
     if (!data) {
       return NextResponse.json(
         { error: "Invalid API response" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -60,12 +60,12 @@ export async function GET(request: Request) {
     if (error instanceof Error) {
       return NextResponse.json(
         { error: "Error fetching API", details: error.message },
-        { status: 500 }
+        { status: 500 },
       );
     } else {
       return NextResponse.json(
         { error: "Error fetching API", details: "Unknown error" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
