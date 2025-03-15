@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Charity, Nonprofit } from "@/app/types";
+import { Nonprofit } from "@/app/types";
 const API_URL = "https://partners.every.org/v0.2/search";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
@@ -44,7 +44,7 @@ export default function Search({
     return () => {
       if (debounceTimeout) clearTimeout(debounceTimeout);
     };
-  }, [query]);
+  }, [query, debounceTimeout]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {

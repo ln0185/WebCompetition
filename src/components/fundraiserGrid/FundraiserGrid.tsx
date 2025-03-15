@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import Search from "../search/Search";
+import { mapCharityToFundraiser } from "@/app/types";
 
 interface Fundraiser {
   title: string;
@@ -18,37 +20,40 @@ interface Fundraiser {
 
 interface CharityGridProps {
   fundraisers: Fundraiser[];
-  onCharityClick: (charity: Fundraiser) => void;
+  setFundraisers: React.Dispatch<React.SetStateAction<Fundraiser[]>>;
+  selectedCategory: string;
 }
 
-const categories = [
-  "All",
-  "education",
-  "animals",
-  "health",
-  "environment",
-  "poverty",
-  "oceans",
-  "refugees",
-];
-
-const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+const FundraiserGrid: React.FC<CharityGridProps> = ({
+  fundraisers,
+  selectedCategory,
+  setFundraisers,
+}) => {
   const [currentPage, setCurrentPage] = useState(0);
   const fundraisersPerPage = 6;
 
-  // Filter fundraisers based on the selected category
   const filteredFundraisers =
-    selectedCategory === "All"
+    selectedCategory === "all"
       ? fundraisers
       : fundraisers.filter((fundraiser) =>
-          fundraiser.tags.includes(selectedCategory.toLowerCase()),
+          fundraiser.tags.some(
+            (tag) => tag.toLowerCase() === selectedCategory.toLowerCase(),
+          ),
         );
 
   const totalPages = Math.ceil(filteredFundraisers.length / fundraisersPerPage);
   const startIndex = currentPage * fundraisersPerPage;
   const endIndex = startIndex + fundraisersPerPage;
   const currentFundraisers = filteredFundraisers.slice(startIndex, endIndex);
+
+  const updateSelectedCharity = (charity: Fundraiser) => {
+    // Reorder the fundraisers array: selected charity first, followed by related ones
+    const reorderedFundraisers = [
+      charity,
+      ...fundraisers.filter((f) => f.title !== charity.title), // Add the rest
+    ];
+    setFundraisers(reorderedFundraisers);
+  };
 
   const changePage = (pageIndex: number) => {
     setCurrentPage(pageIndex);
@@ -58,31 +63,17 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
     });
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(0); // Reset pagination when category changes
-  };
-
   return (
-    <div id="charity-grid" className="py-20 px-6 bg-slate-200">
-      {/* Category Buttons */}
-      <div className="flex flex-wrap justify-center gap-3 mb-6">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => handleCategoryChange(category)}
-            className={`px-4 py-2 rounded-full border text-sm font-medium transition-all duration-300 ${
-              selectedCategory === category
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+    <div id="charity-grid" className="px-6 bg-custom-light">
+      <div className="flex flex-wrap justify-center gap-3 ml-[15px]"></div>
 
       {/* Fundraisers Grid */}
+      <Search
+        onSelectCharity={(charity) => {
+          const fundraiser = mapCharityToFundraiser(charity);
+          updateSelectedCharity(fundraiser);
+        }}
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {currentFundraisers.map((fundraiser, index) => {
           const progressPercentage = Math.min(
@@ -96,7 +87,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
               href={fundraiser.profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white"
+              className="block border-[#d9d9d9] rounded-lg overflow-hidden hover:scale-102 transition-transform duration-200 bg-white"
             >
               <div className="relative w-full h-48">
                 <Image
@@ -107,7 +98,7 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
                   className="object-cover"
                 />
                 {fundraiser.logoUrl && (
-                  <div className="absolute bottom-3 left-3 w-12 h-12 rounded-full overflow-hidden border-2 border-white">
+                  <div className="absolute bottom-3 left-3 w-12 h-12 rounded-full overflow-hidden border-2 border-color">
                     <Image
                       key={index}
                       src={fundraiser.logoUrl}
@@ -123,30 +114,30 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
                 <h3 className="text-xl font-semibold line-clamp-1">
                   {fundraiser.title}
                 </h3>
-                <p className="text-gray-600 mt-2 text-sm line-clamp-3 h-16">
+                <p className="text-gray-900 mt-2 text-sm line-clamp-3 h-16">
                   {fundraiser.description}
                 </p>
 
                 <div className="mt-4">
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div className="w-full bg-custom-light rounded-full h-2.5">
                     <div
-                      className="bg-blue-600 h-2.5 rounded-full"
+                      className="bg-button-color h-2.5 rounded-full"
                       style={{ width: `${progressPercentage}%` }}
                     ></div>
                   </div>
                   <div className="flex justify-between mt-2">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-900">
                       Raised: {fundraiser.currency}{" "}
                       {fundraiser.raised.toLocaleString()}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-900">
                       Goal: {fundraiser.currency}{" "}
                       {fundraiser.goalAmount.toLocaleString()}
                     </p>
                   </div>
                 </div>
 
-                <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded w-full transition-colors duration-300">
+                <button className="mt-4 bg-button-color hover:bg-button-color2 text-white font-medium  py-2 px-4 rounded-full w-full transition-colors duration-300">
                   Donate Now
                 </button>
               </div>
@@ -164,8 +155,8 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
               onClick={() => changePage(index)}
               className={`w-3 h-3 rounded-full transition-colors duration-300 ${
                 currentPage === index
-                  ? "bg-blue-600"
-                  : "bg-gray-300 hover:bg-gray-400"
+                  ? "bg-button-color"
+                  : "bg-gray-300 hover:bg-button-color2"
               }`}
               aria-label={`Page ${index + 1}`}
             />
@@ -176,4 +167,4 @@ const CharityGrid: React.FC<CharityGridProps> = ({ fundraisers }) => {
   );
 };
 
-export default CharityGrid;
+export default FundraiserGrid;
