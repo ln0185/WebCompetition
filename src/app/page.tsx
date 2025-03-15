@@ -139,11 +139,11 @@ export default function Page() {
           />
         </div>
         <div className="relative w-full h-full flex justify-center md:justify-end items-center p-10 z-10">
-          <div className="absolute left-15 sm:top-60 md:top-80 z-10 text-white">
+          <div className="absolute left-15 top-60 md:top-80 z-10 text-white">
             <h1 className="text-5xl md:text-7xl font-semibold mb-4 max-w-xl">
               Donate with Confidence
             </h1>
-            <h2 className="text-lg sm:text-xl md:text-2xl font-normal max-w-3xl">
+            <h2 className="text-xl md:text-2xl font-normal max-w-3xl">
               Giving should be simple and transparent. Discover where to donate
               and track how your contribution makes a difference.
             </h2>
@@ -159,15 +159,18 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <div id="next-section" className="relative w-full h-100 bg-custom-light">
-        <div className="absolute sm:top-5 md:top-20 sm:left-20 md:left-15 z-10 text-gray-900">
-          <h2 className="sm:text-2xl md:text-3xl font-semibold mb-4 max-w-sm">
+      <div
+        id="next-section"
+        className="relative w-full h-40 md:h-100 bg-custom-light"
+      >
+        <div className="absolute top-5 md:top-20 left-15 z-10 text-gray-900">
+          <h2 className="text-3xl font-semibold mb-4 max-w-lg md:max-w-sm">
             Giving help to those who need it
           </h2>
         </div>
 
-        <div className="absolute top-50 sm:right-5 md:right-15 z-10 text-gray-900">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-normal max-w-3xl">
+        <div className="absolute top-25 md:top-50 left-5 md:right-15 z-10 text-gray-900">
+          <h3 className="text-lg md:text-2xl font-normal max-w-3xl">
             Discover a network of impact-driven initiatives. Your selected cause
             connects you to organizations and efforts working toward meaningful
             change.
@@ -175,7 +178,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="w-full bg-filter sm:py-1 md:py-6">
+      <div className="md:mt-0 w-full bg-filter py-6">
         <FilterBar
           categories={categories}
           selectedCategory={selectedCategory}
@@ -184,7 +187,7 @@ export default function Page() {
       </div>
 
       <div id="donate-section" className="w-full bg-custom-light py-6">
-        <div className="container flex  md:justify-start sm:justify-center ml-[15px] mb-12 space-x-6">
+        <div className="container flex  md:justify-start justify-center md:ml-[15px] mb-12 space-x-6">
           {/* Text links for Non Profits and Fundraisers */}
           <span
             onClick={() => handleToggleGrid("nonprofits")}
