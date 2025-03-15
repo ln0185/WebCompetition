@@ -89,7 +89,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {currentNonprofits.length > 0 ? (
               currentNonprofits.map((nonprofit) => (
                 <div
@@ -120,7 +120,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
                       </h3>
                     </div>
 
-                    <p className="text-gray-600 line-clamp-3 mb-4 h-18 text-sm">
+                    <p className="text-gray-600 line-clamp-3 mb-4 h-22 text-sm">
                       {nonprofit.description || "No description available"}
                     </p>
 
