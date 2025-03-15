@@ -20,7 +20,12 @@
   .hover\:bg-button-color:hover {
     background-color: #12b76a;
   }
-
+  .hover\:bg-button-color2:hover {
+    background-color: #139357;
+  }
+  .bg-border-color {
+    background-color: #d9d9d9;
+  }
   @media (prefers-color-scheme: dark) {
     :root {
       --background: #0a0a0a;
