@@ -143,7 +143,7 @@ export default function Page() {
             <h1 className="text-5xl md:text-7xl font-semibold mb-4 max-w-xl">
               Donate with Confidence
             </h1>
-            <h2 className="text-xl md:text-2xl font-normal max-w-3xl">
+            <h2 className="text-lg md:text-2xl font-normal md:max-w-2xl">
               Giving should be simple and transparent. Discover where to donate
               and track how your contribution makes a difference.
             </h2>
@@ -163,15 +163,15 @@ export default function Page() {
         id="next-section"
         className="relative w-full h-40 md:h-100 bg-custom-light"
       >
-        <div className="absolute top-5 md:top-20 left-15 z-10 text-gray-900">
-          <h2 className="text-3xl font-semibold mb-4 max-w-lg md:max-w-sm">
+        <div className="absolute top-5 md:top-20 left-5 md:left-15 z-10 text-gray-900">
+          <h2 className="text-2xl md:text-4xl font-semibold mb-4 max-w-lg md:max-w-md">
             Giving help to those who need it
           </h2>
         </div>
 
-        <div className="absolute top-25 md:top-50 left-5 md:right-15 z-10 text-gray-900">
+        <div className="absolute top-20 md:top-50 left-5 md:right-15 z-10 text-gray-900">
           <h3 className="text-lg md:text-2xl font-normal max-w-3xl">
-            Discover a network of impact-driven initiatives. Your selected cause
+            Discover a network of impact driven initiatives. Your selected cause
             connects you to organizations and efforts working toward meaningful
             change.
           </h3>
