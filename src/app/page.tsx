@@ -4,9 +4,10 @@ import Navbar from "../components/navBar/NavBar";
 import Image from "next/image";
 import FundraiserGrid from "../components/fundraiserGrid/FundraiserGrid";
 import NonprofitGrid from "../components/nonProfitGrid/NonprofitGrid";
-
 import FilterBar from "../components/filterBar/FilterBar";
 import ArrowLogo from "./../../public/Arrow logo.svg";
+import ArrowLogoFooter from "./../../public/Arrow Logo Footer.svg";
+import Footer from "../components/footer/Footer";
 
 interface Nonprofit {
   name: string;
@@ -52,7 +53,9 @@ export default function Page() {
     "poverty",
     "refugees",
   ];
-
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   useEffect(() => {
     const fetchFundraisers = async () => {
       setIsLoading(true);
@@ -227,24 +230,25 @@ export default function Page() {
             </div>
           </div>
         )}
+        {/* Back to Top Button - Hidden on Mobile */}
+        <div className="w-full md:flex justify-end my-6 hidden md:px-8">
+          <button
+            onClick={handleScrollToTop}
+            aria-label="Back to top"
+            className="p-2 transition-colors"
+          >
+            <Image
+              src={ArrowLogoFooter}
+              alt="Back to Top"
+              width={50}
+              height={50}
+              className="cursor-pointer transition transform hover:scale-110"
+            />
+          </button>
+        </div>
+
+        <Footer />
       </div>
     </div>
   );
 }
-
-/*
-<div className="relative bg-slate-200">
-  <Search
-    onSelectCharity={(charity) => {
-      const fundraiser = mapCharityToFundraiser(charity);
-      updateSelectedCharity(fundraiser);
-    }}
-  />
-</div>
-
-<CharityGrid
-  fundraisers={fundraisers}
-  onCharityClick={updateSelectedCharity}
-/>
-
-*/

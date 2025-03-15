@@ -13,7 +13,7 @@ export default function Search({
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
-    null,
+    null
   );
 
   // Fetch data after query change
