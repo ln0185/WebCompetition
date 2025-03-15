@@ -143,7 +143,7 @@ export default function Page() {
             <h1 className="text-5xl md:text-7xl font-semibold mb-4 max-w-xl">
               Donate with Confidence
             </h1>
-            <h2 className="text-lg md:text-2xl font-normal md:max-w-2xl">
+            <h2 className="text-lg md:text-2xl font-normal max-w-2xl">
               Giving should be simple and transparent. Discover where to donate
               and track how your contribution makes a difference.
             </h2>
