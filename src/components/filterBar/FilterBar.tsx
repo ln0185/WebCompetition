@@ -16,7 +16,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
   onCategoryChange,
 }) => {
   return (
-    <div className="hidden md:flex justify-center w-full bg-filter py-6">
+    <div className="hidden md:flex justify-center w-[95%] bg-filter py-6">
       <div className="w-full max-w-[1240px] mx-auto">
         {/* Title Aligned with First Button */}
         <h2 className="text-md font-light mb-4 text-left ml-[15px]">
@@ -24,12 +24,12 @@ const FilterBar: React.FC<FilterBarProps> = ({
         </h2>
 
         {/* Category Buttons Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full ml-[15px]">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => onCategoryChange(category)}
-              className={`w-full max-w-[300px] h-[105px] rounded-[16px] text-sm font-medium transition-colors relative flex flex-col justify-between px-6 py-[17px] pr-12
+              className={`w-full max-w-[400px] h-[105px] rounded-[16px] text-sm font-medium transition-colors relative flex flex-col justify-between px-6 py-4 pr-12
                 ${
                   selectedCategory === category
                     ? "bg-button-color text-white"

@@ -24,7 +24,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const nonprofitsPerPage = 8;
+  const nonprofitsPerPage = 6;
 
   useEffect(() => {
     const fetchNonprofits = async () => {
@@ -73,7 +73,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
         <p>Error loading nonprofits: {error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="mt-4 px-4 py-2 bg-button-color text-white rounded"
         >
           Try Again
         </button>
@@ -85,7 +85,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
     <div id="nonprofit-grid" className="w-full">
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-border-color"></div>
         </div>
       ) : (
         <>
@@ -94,7 +94,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
               currentNonprofits.map((nonprofit) => (
                 <div
                   key={`${nonprofit.ein}-${nonprofit.name}`}
-                  className="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition-shadow duration-300 relative"
+                  className="bg-white rounded-xl overflow-hidden hover:scale-102 transition-transform duration-200 relative"
                 >
                   <div className="p-5">
                     <div className="flex items-center mb-4">
@@ -109,7 +109,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
                           />
                         ) : (
                           <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                            <span className="text-blue-600 text-lg font-bold">
+                            <span className="text-gray-900 text-lg font-bold">
                               {nonprofit.name.charAt(0)}
                             </span>
                           </div>
@@ -129,7 +129,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
                         href={nonprofit.profileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+                        className="px-3 py-2 bg-button-color text-white text-sm rounded-lg hover:bg-button-color2 transition-colors"
                       >
                         Donate
                       </Link>
@@ -139,7 +139,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
                           href={nonprofit.websiteUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors"
+                          className="px-3 py-2 border border-[#d9d9d9] text-gray-700 text-sm rounded-lg hover:bg-button-color hover:text-white transition-colors"
                         >
                           Learn More
                         </Link>
@@ -163,8 +163,8 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
                   onClick={() => changePage(index)}
                   className={`w-3 h-3 rounded-full transition-colors duration-300 ${
                     currentPage === index
-                      ? "bg-blue-600"
-                      : "bg-gray-300 hover:bg-gray-400"
+                      ? "bg-button-color"
+                      : "bg-gray-300 hover:bg-button-color2"
                   }`}
                   aria-label={`Page ${index + 1}`}
                 />
