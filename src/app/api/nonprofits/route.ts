@@ -62,12 +62,12 @@ export async function GET(request: Request) {
     if (error instanceof Error) {
       return NextResponse.json(
         { error: "Error fetching API", details: error.message },
-        { status: 500 }
+        { status: 500 },
       );
     } else {
       return NextResponse.json(
         { error: "Error fetching API", details: "Unknown error" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import Search from "../search/Search";
+import { mapCharityToFundraiser } from "@/app/types";
 
 interface Fundraiser {
   title: string;
@@ -18,12 +20,14 @@ interface Fundraiser {
 
 interface CharityGridProps {
   fundraisers: Fundraiser[];
+  setFundraisers: React.Dispatch<React.SetStateAction<Fundraiser[]>>;
   selectedCategory: string;
 }
 
 const FundraiserGrid: React.FC<CharityGridProps> = ({
   fundraisers,
   selectedCategory,
+  setFundraisers,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const fundraisersPerPage = 6;
@@ -33,14 +37,23 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
       ? fundraisers
       : fundraisers.filter((fundraiser) =>
           fundraiser.tags.some(
-            (tag) => tag.toLowerCase() === selectedCategory.toLowerCase()
-          )
+            (tag) => tag.toLowerCase() === selectedCategory.toLowerCase(),
+          ),
         );
 
   const totalPages = Math.ceil(filteredFundraisers.length / fundraisersPerPage);
   const startIndex = currentPage * fundraisersPerPage;
   const endIndex = startIndex + fundraisersPerPage;
   const currentFundraisers = filteredFundraisers.slice(startIndex, endIndex);
+
+  const updateSelectedCharity = (charity: Fundraiser) => {
+    // Reorder the fundraisers array: selected charity first, followed by related ones
+    const reorderedFundraisers = [
+      charity,
+      ...fundraisers.filter((f) => f.title !== charity.title), // Add the rest
+    ];
+    setFundraisers(reorderedFundraisers);
+  };
 
   const changePage = (pageIndex: number) => {
     setCurrentPage(pageIndex);
@@ -55,11 +68,17 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
       <div className="flex flex-wrap justify-center gap-3 ml-[15px]"></div>
 
       {/* Fundraisers Grid */}
+      <Search
+        onSelectCharity={(charity) => {
+          const fundraiser = mapCharityToFundraiser(charity);
+          updateSelectedCharity(fundraiser);
+        }}
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {currentFundraisers.map((fundraiser, index) => {
           const progressPercentage = Math.min(
             100,
-            (fundraiser.raised / fundraiser.goalAmount) * 100
+            (fundraiser.raised / fundraiser.goalAmount) * 100,
           );
 
           return (
@@ -72,6 +91,7 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
             >
               <div className="relative w-full h-48">
                 <Image
+                  key={index}
                   src={fundraiser.coverImageUrl}
                   alt={`${fundraiser.title} cover`}
                   fill
@@ -80,6 +100,7 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
                 {fundraiser.logoUrl && (
                   <div className="absolute bottom-3 left-3 w-12 h-12 rounded-full overflow-hidden border-2 border-color">
                     <Image
+                      key={index}
                       src={fundraiser.logoUrl}
                       alt={`${fundraiser.title} logo`}
                       fill

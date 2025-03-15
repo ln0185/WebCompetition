@@ -4,6 +4,7 @@ import Navbar from "../components/navBar/NavBar";
 import Image from "next/image";
 import FundraiserGrid from "../components/fundraiserGrid/FundraiserGrid";
 import NonprofitGrid from "../components/nonProfitGrid/NonprofitGrid";
+
 import FilterBar from "../components/filterBar/FilterBar";
 import ArrowLogo from "./../../public/Arrow logo.svg";
 
@@ -221,6 +222,7 @@ export default function Page() {
               <FundraiserGrid
                 fundraisers={fundraisers}
                 selectedCategory={selectedCategory}
+                setFundraisers={setFundraisers}
               />
             </div>
           </div>
@@ -229,3 +231,20 @@ export default function Page() {
     </div>
   );
 }
+
+/*
+<div className="relative bg-slate-200">
+  <Search
+    onSelectCharity={(charity) => {
+      const fundraiser = mapCharityToFundraiser(charity);
+      updateSelectedCharity(fundraiser);
+    }}
+  />
+</div>
+
+<CharityGrid
+  fundraisers={fundraisers}
+  onCharityClick={updateSelectedCharity}
+/>
+
+*/

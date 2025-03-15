@@ -3,16 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-interface Nonprofit {
-  name: string;
-  description: string;
-  profileUrl: string;
-  logoUrl: string;
-  websiteUrl?: string;
-  ein: string;
-  matchedTerms?: string[];
-}
+import Search from "../search/Search";
+import { mapCharityToNonProfit, Nonprofit } from "@/app/types";
 
 interface NonprofitGridProps {
   selectedCategory: string;
@@ -26,10 +18,22 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
 
   const nonprofitsPerPage = 6;
 
+  const updateSelectedCharity = (charity: Nonprofit) => {
+    // Reorder the fundraisers array: selected charity first, followed by related ones
+    const reorderedFundraisers = [
+      charity,
+      ...nonprofits.filter((f) => f.name !== charity.name), // Add the rest
+    ];
+    setNonprofits(reorderedFundraisers);
+  };
+
   useEffect(() => {
     const fetchNonprofits = async () => {
       try {
         setLoading(true);
+
+        //const searchTerm = activeCategory === "all" ? "" : activeCategory;
+
         const searchTerm = selectedCategory === "all" ? "" : selectedCategory;
         const queryParam = searchTerm ? `?searchTerm=${searchTerm}` : "";
 
@@ -43,7 +47,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
         setNonprofits(data.nonprofits || []);
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
+          err instanceof Error ? err.message : "An unknown error occurred",
         );
         console.error("Error fetching nonprofits:", err);
       } finally {
@@ -89,6 +93,13 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
         </div>
       ) : (
         <>
+          <Search
+            onSelectCharity={(charity) => {
+              const fundraiser = mapCharityToNonProfit(charity);
+              updateSelectedCharity(fundraiser);
+            }}
+          />
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {currentNonprofits.length > 0 ? (
               currentNonprofits.map((nonprofit) => (
@@ -126,7 +137,7 @@ const NonprofitGrid: React.FC<NonprofitGridProps> = ({ selectedCategory }) => {
 
                     <div className="flex justify-between mt-4">
                       <Link
-                        href={nonprofit.profileUrl}
+                        href={nonprofit.profileUrl as string}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-3 py-2 bg-button-color text-white text-sm rounded-lg hover:bg-button-color2 transition-colors"
