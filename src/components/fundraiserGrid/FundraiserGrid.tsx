@@ -52,7 +52,7 @@ const FundraiserGrid: React.FC<CharityGridProps> = ({
 
   return (
     <div id="charity-grid" className="px-6 bg-custom-light">
-      <div className="flex flex-wrap justify-center gap-3 ml-[15px] "></div>
+      <div className="flex flex-wrap justify-center gap-3 ml-[15px]"></div>
 
       {/* Fundraisers Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">

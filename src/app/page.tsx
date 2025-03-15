@@ -163,13 +163,13 @@ export default function Page() {
         id="next-section"
         className="relative w-full h-40 md:h-100 bg-custom-light"
       >
-        <div className="absolute top-5 md:top-20 left-5 md:left-15 z-10 text-gray-900">
+        <div className="absolute top-5 md:top-20 left-2 md:left-15 z-10 text-gray-900">
           <h2 className="text-2xl md:text-4xl font-semibold mb-4 max-w-lg md:max-w-md">
             Giving help to those who need it
           </h2>
         </div>
 
-        <div className="absolute top-20 md:top-50 left-5 md:right-15 z-10 text-gray-900">
+        <div className="absolute top-20 md:top-50 px-2 md:right-15 z-10 text-gray-900">
           <h3 className="text-lg md:text-2xl font-normal max-w-3xl">
             Discover a network of impact driven initiatives. Your selected cause
             connects you to organizations and efforts working toward meaningful
@@ -187,7 +187,7 @@ export default function Page() {
       </div>
 
       <div id="donate-section" className="w-full bg-custom-light py-6">
-        <div className="container flex  md:justify-start justify-center md:ml-[15px] mb-12 space-x-6">
+        <div className="container flex  md:justify-start justify-center md:ml-15 mb-12 space-x-6">
           {/* Text links for Non Profits and Fundraisers */}
           <span
             onClick={() => handleToggleGrid("nonprofits")}
