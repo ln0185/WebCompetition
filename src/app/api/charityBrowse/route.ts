@@ -3,13 +3,18 @@ import { NextResponse } from "next/server";
 const API_URL = "https://partners.every.org/v0.2/browse/animals";
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
+/*
+------------------------------------------------------------
+| Returns NonProfits Associated with a given Cause |
+------------------------------------------------------------
+*/
 export async function GET() {
   console.log("api key:", apiKey);
   if (!apiKey) {
     return NextResponse.json({ error: "API key is missing" }, { status: 500 });
   }
   try {
-    const res = await fetch(`${API_URL}?apiKey=${apiKey}&take=50`);
+    const res = await fetch(`${API_URL}?apiKey=${apiKey}&take=10`); //Can search for alot by
 
     if (!res.ok) {
       const errorText = await res.text();
